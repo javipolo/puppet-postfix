@@ -56,6 +56,9 @@ class postfix {
   if $postfix_mail_user == '' {
     $postfix_mail_user = 'vmail'
   }
+  if $postfix_pcre == '' {
+    $postfix_pcre = false
+  }
 
   case $::operatingsystem {
     /RedHat|CentOS|Fedora/: {
@@ -78,6 +81,14 @@ class postfix {
     }
   }
 
+  if ( $postfix_pcre ) {
+    case $::operatingsystem {
+      /Debian|Ubuntu/: {
+        $postfix_pcre_package = 'postfix-pcre'
+        }
+      }
+  }
+
   $master_os_template = $::operatingsystem ? {
     /RedHat|CentOS/          => template('postfix/master.cf.redhat.erb', 'postfix/master.cf.common.erb'),
     /Debian|Ubuntu|kFreeBSD/ => template('postfix/master.cf.debian.erb', 'postfix/master.cf.common.erb'),
@@ -90,6 +101,14 @@ class postfix {
   package { 'mailx':
     ensure => installed,
     name   => $mailx_package,
+  }
+
+  if ( $postfix_pcre_package ) {
+    package { 'postfix-pcre':
+      ensure  => installed,
+      name    => $postfix_pcre_package,
+      require => Package['postfix'],
+    }
   }
 
   service { 'postfix':
