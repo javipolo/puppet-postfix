@@ -88,6 +88,7 @@ class postfix (
   $root_mail_recipient = 'nobody',      # root_mail_recipient
   $satellite           = false,
   $smtp_listen         = '127.0.0.1',   # postfix_smtp_listen
+  $use_pcre            = false,         # postfix_use_pcre
   $use_amavisd         = false,         # postfix_use_amavisd
   $use_dovecot_lda     = false,         # postfix_use_dovecot_lda
   $use_schleuder       = false,         # postfix_use_schleuder
@@ -99,6 +100,7 @@ class postfix (
   validate_bool($mailman)
   validate_bool($mta)
   validate_bool($satellite)
+  validate_bool($use_pcre)
   validate_bool($use_amavisd)
   validate_bool($use_dovecot_lda)
   validate_bool($use_schleuder)
